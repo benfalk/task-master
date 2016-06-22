@@ -3,7 +3,8 @@ module App exposing (..)
 import Html exposing (..)
 import Html.App as Html
 import Html.Events exposing (..)
-import Random
+import Dict exposing (Dict)
+import WebSocket
 
 main =
   Html.program
@@ -21,18 +22,27 @@ type alias Project =
   }
 
 type alias Model =
-  { projects : List Project
+  { projects : Dict.Dict Int Project
   }
 
 init : (Model, Cmd Msg)
 init =
-  (Model [], Cmd.none)
+  (Model Dict.empty, Cmd.none)
 
 
 -- SUBSCRIPTIONS
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  (Debug.log "Connecting to websocket...")
+  WebSocket.listen "ws://localhost:4000/socket/websocket" sub_to_msg
+
+sub_to_msg sub =
+  case sub of
+    "add" ->
+      Add (Project "test" 1)
+    _ ->
+      Debug.crash "This line is here to make it compile...."
+      
 
 
 -- UPDATE
@@ -46,13 +56,13 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Add project ->
-      ({ model | projects = project :: model.projects }, Cmd.none)
+      ({ model | projects = (Dict.insert project.id project model.projects)}, Cmd.none)
 
     Remove project ->
-      ({ model | projects = List.filter (\p -> p.id /= project.id) model.projects}, Cmd.none)
+      ({ model | projects = (Dict.remove project.id model.projects)}, Cmd.none)
 
     Update project ->
-      ({ model | projects = List.map (\p -> if p.id == project.id then project else p) model.projects}, Cmd.none)
+      ({ model | projects = (Dict.insert project.id project model.projects)}, Cmd.none)
 
 
 -- VIEW
