@@ -32,10 +32,12 @@ defmodule TaskMaster.ChannelCase do
   end
 
   setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(TaskMaster.Repo)
+
     unless tags[:async] do
-      Ecto.Adapters.SQL.restart_test_transaction(TaskMaster.Repo, [])
+      Ecto.Adapters.SQL.Sandbox.mode(TaskMaster.Repo, {:shared, self()})
     end
 
-    :ok
+    {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

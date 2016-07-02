@@ -5,6 +5,8 @@
 # is restricted to this project.
 use Mix.Config
 
+config :task_master, ecto_repos: [TaskMaster.Repo]
+
 # Configures the endpoint
 config :task_master, TaskMaster.Endpoint,
   url: [host: "localhost"],
