@@ -31,7 +31,7 @@ update msg model =
 
             Nothing ->
               1
-        
+
         project' =
           { project | id = next_id }
       in

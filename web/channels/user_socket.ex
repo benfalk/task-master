@@ -3,6 +3,7 @@ defmodule TaskMaster.UserSocket do
 
   ## Channels
   # channel "rooms:*", TaskMaster.RoomChannel
+  channel "projects", TaskMaster.ProjectChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

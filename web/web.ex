@@ -66,6 +66,7 @@ defmodule TaskMaster.Web do
       use Phoenix.Channel
 
       alias TaskMaster.Repo
+      alias TaskMaster.Project
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
       import TaskMaster.Gettext
